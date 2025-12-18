@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}Select Domain - Multi-LLM Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* CSS for domains page */
+    .domains-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 2rem;
+        border-radius: 16px;
+        text-align: center;
+        margin-bottom: 3rem;
+        animation: fadeInDown 0.6s ease;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .domains-hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .domains-hero p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+    }
+
+    .domains-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .domain-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .domain-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        transform: scaleX(0);
+        transition: transform 0.4s ease;
+    }
+
+    .domain-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .domain-card:hover {
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: 0 12px 40px rgba(99, 102, 241, 0.3);
+    }
+
+    .domain-icon {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .domain-card:hover .domain-icon {
+        animation: none;
+        transform: scale(1.2) rotate(5deg);
+        transition: all 0.4s ease;
+    }
+
+    .domain-card h3 {
+        color: #667eea;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .domain-card p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        flex: 1;
+    }
+
+    .model-count {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+
+    .btn-select {
+        width: 100%;
+        margin-top: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1.05rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-select:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+    }
+
+    .stats-banner {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 3rem;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .domains-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .domains-hero h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="domains-hero">
+        <h1>🎯 Choose Your Domain</h1>
+        <p>Select a specialized domain to access our AI models</p>
+    </div>
+
+    <div class="stats-banner">
+        <div class="stat-item">
+            <div class="stat-number">6</div>
+            <div class="stat-label">Specialized Domains</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">10+</div>
+            <div class="stat-label">AI Models</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Available</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Possibilities</div>
+        </div>
+    </div>
+
+    <div class="domains-grid">
+        {% for domain_key, domain_data in domains.items() %}
+        <a href="{{ url_for('select_model', domain=domain_key) }}" class="domain-card" >
+            <div class="domain-icon">{{ domain_data.icon }}</div>
+            <h3>{{ domain_data.name }}</h3>
+            <p>{{ domain_data.description }}</p>
+            <span class="model-count">{{ domain_data.models|length }} Models Available</span>
+            <button class="btn-select">Select Domain →</button>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

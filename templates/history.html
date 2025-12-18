@@ -1,0 +1,139 @@
+
+<!-- templates/history.html -->
+{% extends "base.html" %}
+
+{% block title %}Chat History - Multi-LLM Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    .history-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .history-header h1 {
+        color: var(--primary);
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .conversations-list {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .conversation-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .conversation-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+    }
+
+    .conversation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .conversation-title {
+        color: var(--primary);
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .conversation-date {
+        color: var(--gray);
+        font-size: 0.9rem;
+    }
+
+    .conversation-meta {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--gray);
+        font-size: 0.9rem;
+    }
+
+    .domain-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--gray);
+    }
+
+    .empty-state-icon {
+        font-size: 5rem;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h2 {
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="history-header">
+        <h1>Your Conversation History</h1>
+        <p style="color: var(--gray); font-size: 1.1rem;">Browse and continue your previous conversations</p>
+    </div>
+
+    {% if conversations %}
+    <div class="conversations-list">
+        {% for conv in conversations %}
+        <div class="conversation-card">
+            <div class="conversation-header">
+                <div class="conversation-title">{{ conv[1].split('/')[-1] }}</div>
+                <div class="conversation-date">{{ conv[3] }}</div>
+            </div>
+            <div class="conversation-meta">
+                <div class="meta-item">
+                    <span>🤖</span>
+                    <span>Model: {{ conv[1].split('/')[-1] }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="domain-badge">{{ conv[2]|replace('_', ' ')|title }}</span>
+                </div>
+                <div class="meta-item">
+                    <span>💬</span>
+                    <span>{{ conv[4] }} messages</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📭</div>
+        <h2>No Conversations Yet</h2>
+        <p>Start chatting with our AI models to see your conversation history here.</p>
+        <a href="{{ url_for('models') }}" class="btn btn-primary" style="margin-top: 1.5rem;">Start Chatting</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

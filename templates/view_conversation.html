@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+
+{% block title %}Conversation - Multi-LLM Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    .conversation-viewer {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .conversation-header-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+    }
+
+    .conversation-header-section h1 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .conversation-meta-info {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        font-size: 0.95rem;
+    }
+
+    .meta-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: white;
+        color: #667eea;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .back-btn:hover {
+        transform: translateX(-5px);
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .messages-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .message-item {
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+        animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .message-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+
+    .message-item.user .message-avatar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .message-item.assistant .message-avatar {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+    }
+
+    .message-body {
+        flex: 1;
+    }
+
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .message-role {
+        font-weight: 700;
+        color: #667eea;
+    }
+
+    .message-time {
+        font-size: 0.85rem;
+        color: #666;
+    }
+
+    .message-content {
+        background: #f8f9fa;
+        padding: 1.25rem;
+        border-radius: 12px;
+        line-height: 1.7;
+        color: #333;
+        border-left: 4px solid #667eea;
+    }
+
+    .message-item.user .message-content {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-left: none;
+        border-right: 4px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .action-bar {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        justify-content: flex-end;
+    }
+
+    .action-button {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-export {
+        background: #10b981;
+        color: white;
+    }
+
+    .btn-export:hover {
+        background: #059669;
+        transform: translateY(-2px);
+    }
+
+    .btn-continue {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-continue:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .empty-conversation {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+    }
+
+    @media (max-width: 768px) {
+        .message-item {
+            flex-direction: column;
+        }
+
+        .action-bar {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="conversation-viewer">
+    <a href="{{ url_for('history') }}" class="back-btn">
+        ← Back to History
+    </a>
+
+    <div class="conversation-header-section">
+        <h1>📝 {{ conversation[4] or 'Conversation Details' }}</h1>
+        <div class="conversation-meta-info">
+            <div class="meta-badge">
+                🤖 Model: {{ conversation[1].split('/')[-1] }}
+            </div>
+            <div class="meta-badge">
+                🏷️ Domain: {{ conversation[2]|replace('_', ' ')|title }}
+            </div>
+            <div class="meta-badge">
+                📅 {{ conversation[5] }}
+            </div>
+            <div class="meta-badge">
+                💬 {{ messages|length if messages else 0 }} messages
+            </div>
+        </div>
+    </div>
+
+    <div class="action-bar">
+        <button class="action-button btn-export" onclick="exportConversation()">
+            📥 Export
+        </button>
+        <a href="{{ url_for('chat', domain=conversation[2], model_name=conversation[1].replace('/', '_')) }}" class="action-button btn-continue">
+            ↩️ Continue Chat
+        </a>
+    </div>
+
+    <div class="messages-container">
+        {% if messages %}
+            {% for msg in messages %}
+            <div class="message-item {{ msg[0] }}">
+                <div class="message-avatar">
+                    {% if msg[0] == 'user' %}👤{% else %}🤖{% endif %}
+                </div>
+                <div class="message-body">
+                    <div class="message-header">
+                        <span class="message-role">{{ msg[0]|title }}</span>
+                        <span class="message-time">{{ msg[2] }}</span>
+                    </div>
+                    <div class="message-content">
+                        {{ msg[1] }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-conversation">
+                <p>No messages in this conversation.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function exportConversation() {
+        // Check if messages exists and is an array
+        let conversationMessages = [];
+        {% if messages %}
+            conversationMessages = {{ messages|tojson|safe }};
+        {% endif %}
+        
+        const conversationTitle = "{{ conversation[4] or 'Conversation' }}";
+        
+        let content = `Conversation: ${conversationTitle}\n`;
+        content += `Model: {{ conversation[1] }}\n`;
+        content += `Domain: {{ conversation[2] }}\n`;
+        content += `Date: {{ conversation[5] }}\n`;
+        content += `\n${'='.repeat(50)}\n\n`;
+        
+        conversationMessages.forEach(msg => {
+            content += `${msg[0].toUpperCase()} [${msg[2]}]:\n`;
+            content += `${msg[1]}\n\n`;
+        });
+        
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `conversation_${conversationTitle.replace(/\s+/g, '_')}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+
+{% block title %}Select Model - {{ domain_info.name }} - Multi-LLM Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    .model-selection-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .domain-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 2rem;
+        border-radius: 16px;
+        text-align: center;
+        margin-bottom: 3rem;
+        animation: slideInDown 0.6s ease;
+    }
+
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .domain-header .icon {
+        font-size: 5rem;
+        margin-bottom: 1rem;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    .domain-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .domain-header p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+    }
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: white;
+        color: var(--primary);
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .back-button:hover {
+        transform: translateX(-5px);
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .models-list {
+        display: grid;
+        gap: 2rem;
+    }
+
+    .model-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s ease;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        animation: fadeInRight 0.6s ease;
+    }
+
+    @keyframes fadeInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .model-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        transform: scaleY(0);
+        transition: transform 0.4s ease;
+    }
+
+    .model-card:hover::before {
+        transform: scaleY(1);
+    }
+
+    .model-card:hover {
+        transform: translateX(10px);
+        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
+    }
+
+    .model-info {
+        flex: 1;
+    }
+
+    .model-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .model-icon {
+        font-size: 2.5rem;
+    }
+
+    .model-description {
+        color: var(--gray);
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .model-badges {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .badge-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .badge-success {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge-info {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .btn-start-chat {
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-start-chat:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 25px rgba(99, 102, 241, 0.6);
+    }
+
+    .info-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin-top: 3rem;
+    }
+
+    .info-section h3 {
+        color: var(--primary);
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .capabilities {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .capability-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: var(--light);
+        border-radius: 10px;
+    }
+
+    .capability-icon {
+        font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .model-card {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .btn-start-chat {
+            width: 100%;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="model-selection-container">
+    <a href="{{ url_for('select_domain') }}" class="back-button">
+        ← Back to Domains
+    </a>
+
+    <div class="domain-header">
+        <div class="icon">{{ domain_info.icon }}</div>
+        <h1>{{ domain_info.name }}</h1>
+        <p>{{ domain_info.description }}</p>
+    </div>
+
+    <div class="content-wrapper">
+        <h2 style="color: var(--primary); margin-bottom: 2rem; font-size: 2rem;">
+            Available Models
+        </h2>
+
+        <div class="models-list">
+            {% for model in domain_info.models %}
+            <div class="model-card">
+                <div class="model-info">
+                    <div class="model-name">
+                        <span class="model-icon">🤖</span>
+                        {{ model.split('/')[-1] }}
+                    </div>
+                    <div class="model-description">
+                        Advanced AI model specialized in {{ domain_info.name }} with state-of-the-art capabilities
+                    </div>
+                    <div class="model-badges">
+                        <span class="badge badge-primary">{{ domain }}</span>
+                        <span class="badge badge-success">Active</span>
+                        <span class="badge badge-info">Fast Response</span>
+                    </div>
+                </div>
+                <a href="{{ url_for('chat', domain=domain, model_name=model.replace('/', '_')) }}" class="btn-start-chat">
+                    Start Chat 💬
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="info-section">
+            <h3>What This Domain Can Help You With</h3>
+            <div class="capabilities">
+                <div class="capability-item">
+                    <span class="capability-icon">💬</span>
+                    <span>Natural Conversations</span>
+                </div>
+                <div class="capability-item">
+                    <span class="capability-icon">📁</span>
+                    <span>File Analysis</span>
+                </div>
+                <div class="capability-item">
+                    <span class="capability-icon">🖼️</span>
+                    <span>Image Processing</span>
+                </div>
+                <div class="capability-item">
+                    <span class="capability-icon">📄</span>
+                    <span>Document Review</span>
+                </div>
+                <div class="capability-item">
+                    <span class="capability-icon">💻</span>
+                    <span>Code Analysis</span>
+                </div>
+                <div class="capability-item">
+                    <span class="capability-icon">🎯</span>
+                    <span>Expert Guidance</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

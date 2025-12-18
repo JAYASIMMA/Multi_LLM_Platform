@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Multi-LLM Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 16px;
+        margin-bottom: 3rem;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        animation: fadeInUp 0.8s ease;
+    }
+
+    .hero p {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+        animation: fadeInUp 1s ease;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .cta-buttons .btn {
+        font-size: 1.1rem;
+        padding: 1rem 2rem;
+    }
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+
+    .feature-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+        color: var(--primary);
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .feature-card p {
+        color: var(--gray);
+        line-height: 1.6;
+    }
+
+    .domains-section {
+        background: white;
+        padding: 3rem 2rem;
+        border-radius: 16px;
+        margin: 3rem 0;
+    }
+
+    .domains-section h2 {
+        text-align: center;
+        color: var(--primary);
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+    }
+
+    .domains-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .domain-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .domain-badge:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+    }
+
+    .domain-badge .emoji {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .stats-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    .stat-card .number {
+        font-size: 3rem;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card .label {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>🤖 Multi-LLM Platform</h1>
+    <p>Connect with specialized AI models across multiple domains</p>
+    <div class="cta-buttons">
+        {% if session.user_id %}
+            <a href="{{ url_for('select_domain') }}" class="btn btn-primary">Start Chatting</a>
+            <a href="{{ url_for('history') }}" class="btn btn-secondary">View History</a>
+        {% else %}
+            <a href="{{ url_for('register') }}" class="btn btn-primary">Get Started</a>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary">Login</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="content-wrapper">
+    <h2 style="text-align: center; color: var(--primary); margin-bottom: 2rem; font-size: 2.5rem;">
+        Why Choose Multi-LLM?
+    </h2>
+
+    <div class="features">
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3>Domain-Specific Models</h3>
+            <p>Access specialized AI models trained for healthcare, agriculture, coding, education, natural medicine, and Tamil language.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <h3>Multi-Format Input</h3>
+            <p>Chat with text, upload images, documents, code files, PDFs, and more for comprehensive AI assistance.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Conversation History</h3>
+            <p>All your conversations are saved and organized, making it easy to reference previous interactions.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Secure & Private</h3>
+            <p>Your data is encrypted and securely stored. We prioritize your privacy and data security.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Fast Responses</h3>
+            <p>Powered by Ollama for lightning-fast AI responses without compromising quality.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🌐</div>
+            <h3>10+ AI Models</h3>
+            <p>Choose from over 10 specialized models optimized for different tasks and languages.</p>
+        </div>
+    </div>
+</div>
+
+<div class="domains-section">
+    <h2>Available Domains</h2>
+    <div class="domains-grid">
+        <div class="domain-badge">
+            <span class="emoji">🏥</span>
+            Healthcare
+        </div>
+        <div class="domain-badge">
+            <span class="emoji">🌾</span>
+            Agriculture
+        </div>
+        <div class="domain-badge">
+            <span class="emoji">💻</span>
+            Coding
+        </div>
+        <div class="domain-badge">
+            <span class="emoji">📚</span>
+            Education
+        </div>
+        <div class="domain-badge">
+            <span class="emoji">🌿</span>
+            Natural Medicine
+        </div>
+        <div class="domain-badge">
+            <span class="emoji">🇮🇳</span>
+            Tamil Language
+        </div>
+    </div>
+</div>
+
+<div class="content-wrapper">
+    <div class="stats-section">
+        <div class="stat-card">
+            <span class="number">10+</span>
+            <span class="label">AI Models</span>
+        </div>
+        <div class="stat-card">
+            <span class="number">6</span>
+            <span class="label">Specialized Domains</span>
+        </div>
+        <div class="stat-card">
+            <span class="number">∞</span>
+            <span class="label">Possibilities</span>
+        </div>
+        <div class="stat-card">
+            <span class="number">24/7</span>
+            <span class="label">Available</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

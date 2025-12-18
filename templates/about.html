@@ -1,0 +1,139 @@
+<!-- templates/about.html -->
+{% extends "base.html" %}
+
+{% block title %}About - Multi-LLM Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 2rem;
+        border-radius: 16px;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .about-hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .about-section {
+        margin-bottom: 3rem;
+    }
+
+    .about-section h2 {
+        color: var(--primary);
+        margin-bottom: 1rem;
+        font-size: 2rem;
+    }
+
+    .about-section p {
+        color: var(--gray);
+        line-height: 1.8;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .team-member {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .team-member-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .team-member h3 {
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .team-member p {
+        color: var(--gray);
+        font-size: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="about-hero">
+        <h1>About Multi-LLM Platform</h1>
+        <p style="font-size: 1.2rem; opacity: 0.95;">Empowering users with specialized AI models across multiple domains</p>
+    </div>
+
+    <div class="about-section">
+        <h2>Our Mission</h2>
+        <p>
+            Multi-LLM Platform is dedicated to democratizing access to specialized artificial intelligence. We believe that AI should be accessible, 
+            domain-specific, and tailored to meet the unique needs of different industries and communities. Our platform bridges the gap between 
+            cutting-edge AI technology and practical, real-world applications.
+        </p>
+        <p>
+            By providing access to over 10 specialized models across healthcare, agriculture, coding, education, natural medicine, and Tamil language, 
+            we empower users to leverage AI in ways that matter most to them.
+        </p>
+    </div>
+
+    <div class="about-section">
+        <h2>What Makes Us Different</h2>
+        <p>
+            Unlike general-purpose AI assistants, our platform focuses on domain expertise. Each model is specifically trained and optimized for 
+            its respective field, ensuring you get accurate, relevant, and contextually appropriate responses.
+        </p>
+        <p>
+            We support multiple input types including text, images, code files, and documents, making it easy to get help regardless of how your 
+            information is formatted. All conversations are securely stored, allowing you to build on previous interactions and maintain context 
+            across sessions.
+        </p>
+    </div>
+
+    <div class="about-section">
+        <h2>Technology Stack</h2>
+        <p>
+            Built on Flask and powered by Ollama, our platform combines the flexibility of Python web development with the power of local LLM 
+            inference. This architecture ensures fast response times, data privacy, and the ability to run multiple specialized models efficiently.
+        </p>
+    </div>
+
+    <div class="about-section">
+        <h2>Our Values</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="team-member-icon">🎯</div>
+                <h3>Specialization</h3>
+                <p>Domain-specific expertise over generic responses</p>
+            </div>
+            <div class="team-member">
+                <div class="team-member-icon">🔒</div>
+                <h3>Privacy</h3>
+                <p>Your data is secure and never shared</p>
+            </div>
+            <div class="team-member">
+                <div class="team-member-icon">🚀</div>
+                <h3>Performance</h3>
+                <p>Fast, reliable AI responses when you need them</p>
+            </div>
+            <div class="team-member">
+                <div class="team-member-icon">🌍</div>
+                <h3>Accessibility</h3>
+                <p>AI for everyone, in multiple languages</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
